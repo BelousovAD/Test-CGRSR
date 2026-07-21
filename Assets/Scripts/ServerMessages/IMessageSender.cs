@@ -2,7 +2,7 @@ using Mirror;
 
 namespace ServerMessages
 {
-    internal interface IMessageSender
+    public interface IMessageSender
     {
         public void Send();
 
