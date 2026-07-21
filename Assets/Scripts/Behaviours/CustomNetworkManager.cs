@@ -43,6 +43,20 @@ namespace Behaviours
 
         #region Server
 
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+            
+            _messageToClients.Start();
+        }
+
+        public override void OnStopServer()
+        {
+            _messageToClients.Stop();
+            
+            base.OnStopServer();
+        }
+
         public override void OnServerDisconnect(NetworkConnectionToClient conn)
         {
             _messageToClients.UnsubscribeClient(conn);

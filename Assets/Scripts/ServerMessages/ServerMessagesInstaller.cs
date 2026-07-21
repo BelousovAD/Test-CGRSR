@@ -6,7 +6,7 @@ namespace ServerMessages
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<MessageToClients>().AsSingle();
+            Container.Bind<MessageToClients>().AsSingle();
             Container.Bind<MessageFromServer>().AsSingle();
         }
     }

@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace ServerMessages
 {
-    public class MessageToClients : IDisposable
+    public class MessageToClients
     {
         private readonly Dictionary<Type, HashSet<NetworkConnectionToClient>> _listeners = new ();
 
-        public MessageToClients() =>
-            NetworkServer.RegisterHandler<SubscribeRequest>(SubscribeClientToMessage);
-
         public event Action<NetworkConnectionToClient, Type> Subscribed;
 
-        public void Dispose()
+        public void Start() =>
+            NetworkServer.RegisterHandler<SubscribeRequest>(SubscribeClientToMessage);
+
+        public void Stop()
         {
             NetworkServer.UnregisterHandler<SubscribeRequest>();
 
