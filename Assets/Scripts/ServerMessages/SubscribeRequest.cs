@@ -4,6 +4,6 @@ namespace ServerMessages
 {
     internal struct SubscribeRequest : NetworkMessage
     {
-        public string TypeName;
+        public ushort TypeId;
     }
 }

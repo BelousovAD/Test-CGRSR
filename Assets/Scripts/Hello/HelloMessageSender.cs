@@ -13,9 +13,9 @@ namespace Hello
         {
         }
 
-        protected override void HandleSubscription(NetworkConnectionToClient conn, Type messageType)
+        protected override void HandleSubscription(NetworkConnectionToClient conn, ushort messageId)
         {
-            if (messageType == typeof(HelloMessage))
+            if (messageId == NetworkMessageId<HelloMessage>.Id)
             {
                 SendTo(conn);
             }

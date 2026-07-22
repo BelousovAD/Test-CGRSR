@@ -29,7 +29,7 @@ namespace ServerMessages
         public void ChangeMessage(T message) =>
             _message = message;
 
-        protected virtual void HandleSubscription(NetworkConnectionToClient conn, Type messageType)
+        protected virtual void HandleSubscription(NetworkConnectionToClient conn, ushort messageId)
         {
         }
     }

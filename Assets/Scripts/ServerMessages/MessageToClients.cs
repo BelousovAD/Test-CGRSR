@@ -7,9 +7,9 @@ namespace ServerMessages
 {
     public class MessageToClients
     {
-        private readonly Dictionary<Type, HashSet<NetworkConnectionToClient>> _listeners = new ();
+        private readonly Dictionary<ushort, HashSet<NetworkConnectionToClient>> _listeners = new ();
 
-        public event Action<NetworkConnectionToClient, Type> Subscribed;
+        public event Action<NetworkConnectionToClient, ushort> Subscribed;
 
         public void Start()
         {
@@ -33,7 +33,7 @@ namespace ServerMessages
         public void Send<T>(T message)
             where T : struct, NetworkMessage
         {
-            if (_listeners.TryGetValue(typeof(T), out HashSet<NetworkConnectionToClient> listeners) == false)
+            if (_listeners.TryGetValue(NetworkMessageId<T>.Id, out HashSet<NetworkConnectionToClient> listeners) == false)
             {
                 return;
             }
@@ -47,7 +47,7 @@ namespace ServerMessages
         public void SendTo<T>(NetworkConnectionToClient conn, T message)
             where T : struct, NetworkMessage
         {
-            if (_listeners.TryGetValue(typeof(T), out HashSet<NetworkConnectionToClient> listeners) == false)
+            if (_listeners.TryGetValue(NetworkMessageId<T>.Id, out HashSet<NetworkConnectionToClient> listeners) == false)
             {
                 return;
             }
@@ -68,39 +68,21 @@ namespace ServerMessages
 
         private void SubscribeClientToMessage(NetworkConnectionToClient conn, SubscribeRequest request)
         {
-            Type type = Type.GetType(request.TypeName);
-
-            if (type is null)
-            {
-                Debug.LogError($"Failed to subscribe client {conn.connectionId}" +
-                               $" to message type {request.TypeName}. Type not found.");
-                return;
-            }
-            
-            if (_listeners.TryGetValue(type, out HashSet<NetworkConnectionToClient> listeners))
+            if (_listeners.TryGetValue(request.TypeId, out HashSet<NetworkConnectionToClient> listeners))
             {
                 listeners.Add(conn);
             }
             else
             {
-                _listeners.Add(type, new HashSet<NetworkConnectionToClient> { conn });
+                _listeners.Add(request.TypeId, new HashSet<NetworkConnectionToClient> { conn });
             }
 
-            Subscribed?.Invoke(conn, type);
+            Subscribed?.Invoke(conn, request.TypeId);
         }
         
         private void UnsubscribeClientFromMessage(NetworkConnectionToClient conn, UnsubscribeRequest request)
         {
-            Type type = Type.GetType(request.TypeName);
-
-            if (type is null)
-            {
-                Debug.LogError($"Failed to unsubscribe client {conn.connectionId}" +
-                               $" from message type {request.TypeName}. Type not found.");
-                return;
-            }
-            
-            if (_listeners.TryGetValue(type, out HashSet<NetworkConnectionToClient> listeners))
+            if (_listeners.TryGetValue(request.TypeId, out HashSet<NetworkConnectionToClient> listeners))
             {
                 listeners.Remove(conn);
             }

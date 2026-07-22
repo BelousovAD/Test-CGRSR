@@ -9,13 +9,13 @@ namespace ServerMessages
             where T : struct, NetworkMessage
         {
             NetworkClient.RegisterHandler(handler);
-            NetworkClient.Send(new SubscribeRequest { TypeName = typeof(T).AssemblyQualifiedName });
+            NetworkClient.Send(new SubscribeRequest { TypeId = NetworkMessageId<T>.Id });
         }
 
         public void Unsubscribe<T>()
             where T : struct, NetworkMessage
         {
-            NetworkClient.Send(new UnsubscribeRequest { TypeName = typeof(T).AssemblyQualifiedName });
+            NetworkClient.Send(new UnsubscribeRequest { TypeId = NetworkMessageId<T>.Id });
             NetworkClient.UnregisterHandler<T>();
         }
     }
