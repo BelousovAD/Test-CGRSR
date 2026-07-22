@@ -8,7 +8,7 @@ namespace Hello
         public override void InstallBindings()
         {
             Container.Bind<IMessageReceiver>().To<HelloMessageReceiver>().AsSingle();
-            Container.BindInterfacesAndSelfTo<HelloMessageSender>().AsSingle();
+            Container.BindInterfacesAndSelfTo<HelloMessageSender>().AsSingle().NonLazy();
         }
     }
 }
