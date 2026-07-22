@@ -16,6 +16,9 @@ namespace ServerMessages
         public void Unsubscribe() =>
             _messageFromServer.Unsubscribe<T>();
 
+        public void UnsubscribeLocally() =>
+            _messageFromServer.UnsubscribeLocally<T>();
+
         protected abstract void Handle(T message);
     }
 }

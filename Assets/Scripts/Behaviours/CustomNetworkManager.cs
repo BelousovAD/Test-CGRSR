@@ -33,7 +33,7 @@ namespace Behaviours
         {
             foreach (IMessageReceiver receiver in _receivers)
             {
-                receiver.Unsubscribe();
+                receiver.UnsubscribeLocally();
             }
         
             base.OnClientDisconnect();

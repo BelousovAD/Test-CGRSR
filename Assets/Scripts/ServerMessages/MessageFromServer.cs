@@ -16,7 +16,11 @@ namespace ServerMessages
             where T : struct, NetworkMessage
         {
             NetworkClient.Send(new UnsubscribeRequest { TypeId = NetworkMessageId<T>.Id });
-            NetworkClient.UnregisterHandler<T>();
+            UnsubscribeLocally<T>();
         }
+
+        public void UnsubscribeLocally<T>()
+            where T : struct, NetworkMessage =>
+            NetworkClient.UnregisterHandler<T>();
     }
 }

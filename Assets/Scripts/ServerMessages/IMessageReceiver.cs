@@ -5,5 +5,7 @@ namespace ServerMessages
         public void Subscribe();
 
         public void Unsubscribe();
+
+        public void UnsubscribeLocally();
     }
 }
