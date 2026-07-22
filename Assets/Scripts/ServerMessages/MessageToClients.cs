@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Mirror;
-using UnityEngine;
 
 namespace ServerMessages
 {
@@ -11,13 +10,13 @@ namespace ServerMessages
 
         public event Action<NetworkConnectionToClient, ushort> Subscribed;
 
-        public void Start()
+        public void StartServer()
         {
             NetworkServer.RegisterHandler<UnsubscribeRequest>(UnsubscribeClientFromMessage);
             NetworkServer.RegisterHandler<SubscribeRequest>(SubscribeClientToMessage);
         }
 
-        public void Stop()
+        public void StopServer()
         {
             NetworkServer.UnregisterHandler<SubscribeRequest>();
             NetworkServer.UnregisterHandler<UnsubscribeRequest>();

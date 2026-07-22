@@ -47,12 +47,12 @@ namespace Behaviours
         {
             base.OnStartServer();
             
-            _messageToClients.Start();
+            _messageToClients.StartServer();
         }
 
         public override void OnStopServer()
         {
-            _messageToClients.Stop();
+            _messageToClients.StopServer();
             
             base.OnStopServer();
         }
