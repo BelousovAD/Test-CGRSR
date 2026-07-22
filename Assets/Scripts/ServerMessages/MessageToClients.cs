@@ -70,7 +70,10 @@ namespace ServerMessages
         {
             if (_listeners.TryGetValue(request.TypeId, out HashSet<NetworkConnectionToClient> listeners))
             {
-                listeners.Add(conn);
+                if (listeners.Add(conn) == false)
+                {
+                    return;
+                }
             }
             else
             {
