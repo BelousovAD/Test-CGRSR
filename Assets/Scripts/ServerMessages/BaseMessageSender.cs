@@ -1,9 +1,10 @@
 using System;
 using Mirror;
+using Zenject;
 
 namespace ServerMessages
 {
-    public abstract class BaseMessageSender<T> : IMessageSender, IDisposable
+    public abstract class BaseMessageSender<T> : IMessageSender, IInitializable, IDisposable
         where T : struct, NetworkMessage
     {
         private readonly MessageToClients _messageToClients;
@@ -13,9 +14,10 @@ namespace ServerMessages
         {
             _messageToClients = messageToClients;
             _message = message;
-
-            _messageToClients.Subscribed += HandleSubscription;
         }
+
+        public void Initialize() =>
+            _messageToClients.Subscribed += HandleSubscription;
 
         public void Dispose() =>
             _messageToClients.Subscribed -= HandleSubscription;
