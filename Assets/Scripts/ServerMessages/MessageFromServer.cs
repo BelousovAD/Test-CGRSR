@@ -13,7 +13,10 @@ namespace ServerMessages
         }
 
         public void Unsubscribe<T>()
-            where T : struct, NetworkMessage =>
+            where T : struct, NetworkMessage
+        {
+            NetworkClient.Send(new UnsubscribeRequest { TypeName = typeof(T).AssemblyQualifiedName });
             NetworkClient.UnregisterHandler<T>();
+        }
     }
 }

@@ -11,12 +11,16 @@ namespace ServerMessages
 
         public event Action<NetworkConnectionToClient, Type> Subscribed;
 
-        public void Start() =>
+        public void Start()
+        {
+            NetworkServer.RegisterHandler<UnsubscribeRequest>(UnsubscribeClientFromMessage);
             NetworkServer.RegisterHandler<SubscribeRequest>(SubscribeClientToMessage);
+        }
 
         public void Stop()
         {
             NetworkServer.UnregisterHandler<SubscribeRequest>();
+            NetworkServer.UnregisterHandler<UnsubscribeRequest>();
 
             foreach (HashSet<NetworkConnectionToClient> listeners in _listeners.Values)
             {
@@ -83,6 +87,23 @@ namespace ServerMessages
             }
 
             Subscribed?.Invoke(conn, type);
+        }
+        
+        private void UnsubscribeClientFromMessage(NetworkConnectionToClient conn, UnsubscribeRequest request)
+        {
+            Type type = Type.GetType(request.TypeName);
+
+            if (type is null)
+            {
+                Debug.LogError($"Failed to unsubscribe client {conn.connectionId}" +
+                               $" from message type {request.TypeName}. Type not found.");
+                return;
+            }
+            
+            if (_listeners.TryGetValue(type, out HashSet<NetworkConnectionToClient> listeners))
+            {
+                listeners.Remove(conn);
+            }
         }
     }
 }
